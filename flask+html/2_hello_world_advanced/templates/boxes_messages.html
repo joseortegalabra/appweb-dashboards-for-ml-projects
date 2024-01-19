@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <h4><a href="/">Return to index page</a></h4>
+
+    <style>
+        .message {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f3f3f3
+        }
+        nav a {
+            color: #d64161;
+            font-size: 3em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<!-- Body -->
+<body>
+
+
+    <h3>--MENSAJES--</h3>
+
+    <!-- Unidad básica para una caja de mensajes -->
+    <div class='message'>
+        <h4>{{message1['title']}}</h4>
+        <p>{{message1['content']}}</p>
+    </div>
+
+
+     <!-- Unidad básica para una caja de mensajes -->
+    <div class='message'>
+        <h4>{{message2['title']}}</h4>
+        <p>{{message2['content']}}</p>
+    </div>
+
+
+    <!-- Unidad básica para una caja de mensajes -->
+    <div class='message'>
+        <h4>TITULO 3</h4>
+        <p>Contenido fijo en html y no obtenido a partir de la API flask</p>
+    </div>
+
+
+</body>
+
+</html>

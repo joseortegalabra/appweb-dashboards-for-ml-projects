@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <style>body{ margin:0 100; background:whitesmoke; }</style>
+    
+    <h4><a href="/">Return to index page</a></h4>
+</head>
+
+
+<!-- Body -->
+<body>
+
+    <!-- Gráfico de barras -->
+    <div id="chart_1" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{json_bar_plot | safe}};
+        Plotly.plot('chart_1',graphs,{});
+    </script>
+
+    <br>
+    <br>
+    <br>
+
+    <!-- Gráfico scatter -->
+    <div id="chart_2" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{json_scatter_plot | safe}};
+        Plotly.plot('chart_2',graphs,{});
+    </script>
+
+
+</body>
+</html>

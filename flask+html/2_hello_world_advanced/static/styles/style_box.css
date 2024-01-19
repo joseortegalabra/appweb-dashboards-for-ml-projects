@@ -1,0 +1,50 @@
+.flex_response {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; }
+
+.kpi-section {
+  margin-right: auto;
+  margin-left: auto;
+  background-color: white;
+  width: 80%; }
+
+.metric_box {
+  margin-bottom: 30px;
+  width: 15%;
+  text-align: center;
+  margin: auto; }
+  .metric_box span {
+    font-size: 2.8rem;
+    font-weight: bold;
+    text-align: center;
+    color: #4863a0; }
+  .metric_box p {
+    font-size: 24px; }
+
+.kpi {
+  min-height: 200px;
+  margin: auto;
+  display: flex; }
+  .kpi div {
+    width: 200px; }
+
+.kpi-title {
+  font-size: 0.8rem;
+  font-weight: bold; }
+
+.text-align {
+  text-align: center; }
+
+.faker {
+  text-align: center;
+  font-size: 18px;
+  color: grey; }
+
+hr {
+  width: 40%;
+  border: 1px solid #c8c8c8;
+  text-align: center;
+  margin-bottom: 15px; }
+
+/*# sourceMappingURL=style.css.map */

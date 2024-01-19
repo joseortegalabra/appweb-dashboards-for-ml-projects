@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <style>body{ margin:0 100; background:whitesmoke; }</style>
+
+
+    <!-- Recargar web con socketio-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
+    <script type="text/javascript">
+      var socket = io.connect('http://127.0.0.1:8080/');
+      socket.on('refresh_page', function() {
+        location.reload();
+      });
+    </script>
+</head>
+
+
+
+<!-- Body -->
+<body>
+
+    <!--Texto con la hora actual, actualizándose cada segundo-->
+    <h4>Current time:</h4>
+    <div id="hora_actual"></div>
+    <script>
+        var source = new EventSource('/actual_time');
+        source.addEventListener('message', function(event) {
+            document.getElementById('hora_actual').innerHTML = event.data;
+        });
+    </script>
+
+
+
+    <!--Texto con la hora de la última actualzación-->
+    <br><br><br>
+    <h2>ÚLTIMA ACTUALIZACIÓN: {{time_actual}}</h2>
+    <br><br>
+
+
+
+    <!-- Unidad básica para hacer un plot en html-->
+    <div id="chart" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{json_plot_time | safe}};
+        Plotly.plot('chart',graphs,{});
+    </script>
+
+
+
+    <!--REFRESH CADA 30 MINUTOS (tiempo en milisegundos)-->
+    <!-- <script>
+    setTimeout(function(){
+    location.reload();
+    }, 1800000);
+    </script> -->
+
+
+
+    <!-- OTRO INTENTO PARA QUE NO SE CAIGA EL REFRESH-->
+    
+
+
+
+
+
+
+
+
+</body>
+</html>

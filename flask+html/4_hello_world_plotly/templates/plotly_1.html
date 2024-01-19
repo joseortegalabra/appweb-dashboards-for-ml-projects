@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <style>body{ margin:0 100; background:whitesmoke; }</style>
+    
+    <h4><a href="/">Return to index page</a></h4>
+</head>
+
+
+<!-- Body -->
+<body>
+
+    <!-- Para poder graficar plotly es necesario agregar un div una "id" y setear su class como "chart"-->
+    <div id="chart" class="chart"></div>
+
+    <!-- Script de JS para poder graficar en plotly - LO ÚNICO QUE SE CAMBIA ES LA VARIABLE CON EL JSON -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{json_plot | safe}};
+        Plotly.plot('chart',graphs,{});
+    </script>
+
+
+</body>
+</html>

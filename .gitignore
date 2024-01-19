@@ -1,0 +1,10 @@
+# Environments para ocultar
+.env
+**/.env
+*.env
+
+
+# SA para ocultar
+cmpc-innovation-cd4ml-test-sa-ds.json
+**/cmpc-innovation-cd4ml-test-sa-ds.json
+*cmpc-innovation-cd4ml-test-sa-ds.json

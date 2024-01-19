@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Head -->
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style_box.css') }}">  <!-- css custom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <h4><a href="/">Return to index page</a></h4>
+</head>
+
+
+<!-- Body -->
+<body>
+
+    <!-- INICIO cajas kpis -->
+    <div class="kpi-section">
+        <div>
+            <div class="text-align">
+                <h2>Cajas de KPIS</h2>
+            </div>
+        </div>
+        <div class="flex_response kpi">
+
+
+        <!-- Unidad básica para una caja ded kpis -->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{kpi1['value']}}</span>
+            </div>
+            <div>
+                <p class="kpi-title">{{kpi1['name']}}</p>
+            </div>
+        </div>
+
+
+        <!-- Unidad básica para una caja ded kpis -->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{kpi2['value']}}</span>
+            </div>
+            <div>
+                <p class="kpi-title">{{kpi2['name']}}</p>
+            </div>
+        </div>
+
+
+        <!-- Unidad básica para una caja ded kpis -->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{kpi3['value']}}</span>
+                <span>%</span>
+            </div>
+            <div>
+                <p class="kpi-title">{{kpi3['name']}}</p>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+    <!-- FIN cajas kpis -->
+    
+    
+    <hr>
+    <h3>Más Contenido...</h3>
+    <h4>Más Contenido más pequeño...</h4>
+    
+    
+    
+    
+    </body>
+  </html>
