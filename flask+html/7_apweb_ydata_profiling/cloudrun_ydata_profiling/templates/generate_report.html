@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<body style="font-family:arial, sans-serif">
+    
+    <!-- Definir Titulo Grande del índice -->
+    <h1 style="background:lightblue;padding:10px"><center>
+            YDATA PROFILING PARA ANÁLISIS EXPLORATORIO BÁSICO (perfilamiento de datos)
+    </center></h1>
+    <h1><center> Realizar perfilamiento: </center></h1>
+
+    <!-- Descripción cómo subir archivos para hacer el perfilamiento de los datos -->
+    <br>
+    <h3><center> Instrucciones </center></h3>
+    
+    <p> <b>-</b> <b>Subir archivo con las extensiones "csv", "excel", "pkl"</b> con los datos a los que se le desean realizar un perfilamiento a los datos.
+        Importante: cada tag debe estar en una columna // La primera columna corresponde a las fechas // El resto de columnas son los tags</p>
+
+    <p> <b>-</b> Se puede elegir <b>dos opciones: Realizar el perfilamiento a un conjunto de datos. Realizar el perfilamiento a dos conjuntos de datos comparándolos</b>
+        (por ejemplo: comparar train vs test, comparar datos antes de limpieza vs después de limpieza)</p>
+
+    <p> <b>-</b> El perfilamiento de los datos (ydata-profiling) tiene un alto costo computacional para realizar algunos análisis (correlaciones, interacciones, missing values, valores duplicados). 
+        Por lo cual existe la opción de realizar un perfilamiento minimalista (minimal) el cual únicamente analiza las variables (percentiles, histogramas, mínimos, máximos) y omite los análisis con alto
+        costo computacional (correlaciones, interacciones, etc). <b>Este análisis minimal sirve como punto de partida para explorar datasets de gran tamaño</b></p>
+
+    <p> <b>-</b> Esta web está configurado para realizar una <b>análisis minimal</b> si el tamaño del dataset subido es <b>superior a 5000 observaciones</b></p>
+
+    <p> <b>-</b> Luego de subir el/los conjuntos de datos se abrirá una nueva pestaña en blanco que cargará mientras se genera el reporte de profiling. Luego de <b>terminar de generarse el reporte se 
+        cerrará la pestaña en blanco y se descargará de forma automática el reporte</b></p>
+
+    <!-- Elegir si realizar el perfilamiento de un archivo o de dos archivos y compararlos -->
+    <br>
+    <br>
+    <h3><center>Subir archivos para perfilamiento</center></h3>
+
+    <div style="display: flex; justify-content: center;">
+        <div style="display: flex; justify-content: space-between;">
+          <div style="border: 2px solid black; padding: 20px; margin-right: 40px;">
+            <h4 style="text-align: center;">Perfilamiento un conjunto de datos</h4>
+            <form action="/profiling_1" method="POST" enctype="multipart/form-data" target="_blank">
+                <label for="file">Archivo:</label>
+                <input type="file" name="file">
+              <br><br>
+              <input type="submit" value="Subir archivo">
+            </form>
+          </div>
+      
+          <div style="border: 2px solid black; padding: 20px; margin-left: 40px;">
+            <h4 style="text-align: center;">Comparar perfilamiento de dos conjuntos de datos</h4>
+            <form action="/profiling_2" method="POST" enctype="multipart/form-data" target="_blank">
+              <label for="file_one">Archivo 1:</label>
+              <input type="file" name="file_one">
+              <br><br>
+              <label for="file_two">Archivo 2:</label>
+              <input type="file" name="file_two">
+              <br><br>
+              <input type="submit" value="Subir archivos">
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+</body>
+</html>
