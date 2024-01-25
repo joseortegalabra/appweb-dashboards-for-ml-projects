@@ -1,5 +1,5 @@
 
-FROM python:3.8
+FROM python:3.10
 EXPOSE 8080
 WORKDIR /app
 COPY . ./
