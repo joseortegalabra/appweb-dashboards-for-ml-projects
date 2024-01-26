@@ -6,6 +6,7 @@ import seaborn as sns
 import plotly.express as px
 from sklearn.linear_model import LinearRegression
 import time
+from datetime import datetime, timedelta
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 #NOTEBOOK TEXT ELEMENTS: https://github.com/marcopeix/MachineLearningModelDeploymentwithStreamlit/blob/master/05_text_elements/main.py
@@ -57,6 +58,7 @@ st.divider()
 st.text('Text above divider')
 st.divider()
 st.text('Text below divider')
+
 
 #st.write
 st.divider()
@@ -172,12 +174,84 @@ num_input = st.number_input("Pick a number", min_value=0, max_value=100, value=0
 st.write(f"You picked {num_input}")
 
 
+
+# date input
+st.divider()
+st.write('#### Date Input')
+date_to_show = st.date_input("Input a date please")
+st.write(f"The date that you select is: {date_to_show}")
+
+
+# Toggle
+st.divider()
+st.write('#### Toggle - component that could be activate / deactivate')
+toggle_on = st.toggle('Activate feature')
+
+if toggle_on:
+    st.write('Feature activated!')
+
+
+
 # Text area
 st.divider()
 st.write('#### Text Area - area to write a long text, the large of the area could be modified')
 
 txt_area = st.text_area("What do you want to tell me?", height=150, placeholder="Write your message here")
 st.write(txt_area)
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# EXAMPLE A BUTTON UPLOAD FILE SINCE THE SIDE BAR - https://bgremoval.streamlit.app/
+st.subheader("UPLOAD FILE - st.file_uploader")
+
+# use st.file_uploader to load files
+uploaded_file = st.file_uploader("Upload a data file", type=["csv", "xlsx"])
+
+# process the file when it is uploaded
+if uploaded_file is not None:
+
+    # load a csv file
+    if uploaded_file.type == "text/csv":
+        df = pd.read_csv(uploaded_file)
+        st.write(df)
+
+    # read a excel file
+    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        df = pd.read_excel(uploaded_file, engine='openpyxl')
+        st.write(df)
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# Mine
+st.subheader("DOWNLOAD A FILE - st.download_button")
+
+# generate data
+data = {'Name': ['John', 'Jane', 'Doe'],
+        'Age': [28, 25, 32],
+        'City': ['New York', 'San Francisco', 'Los Angeles']}
+df = pd.DataFrame(data)
+st.write('Example data')
+st.write(df)
+
+#---
+st.write('---> download data. In this example two ways to downlaod the data were generated')
+
+# button to download the data as csv file
+csv_file = df.to_csv(index=False)
+st.download_button("Download CSV", csv_file, file_name='data.csv', key='csv_key')
+
+# button to dowload a txt file
+text_data = "Este es un archivo de texto de ejemplo."
+st.download_button("Download Texto", text_data, file_name='texto_ejemplo.txt', key='text_key')
+
 
 
 
@@ -216,6 +290,35 @@ st.write(f"""
 
 
 
+
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# lINK IDEA: https://discuss.streamlit.io/t/form-and-submit-button-in-sidebar/12436/2
+st.subheader("FORM IN A SIDEBAR")
+
+with st.form(key ='Form1'):
+    with st.sidebar:
+        user_word = st.sidebar.text_input("Enter a keyword", "habs")    
+        select_language = st.sidebar.radio('Tweet language', ('All', 'English', 'French'))
+        include_retweets = st.sidebar.checkbox('Include retweets in data')
+        num_of_tweets = st.sidebar.number_input('Maximum number of tweets', 100)
+        submitted1 = st.form_submit_button(label = 'Search Twitter 🔎')
+
+if submitted1:
+    st.write(f"""
+            \n**VALUES IN FORM IN A SIDEBAR:**
+            \nuser_word: {user_word}
+            \nselect_language: {select_language}
+            \ninclude_retweets: {include_retweets}
+            \nnum_of_tweets: {num_of_tweets}
+            """)
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 st.divider()
 st.divider()
@@ -226,6 +329,11 @@ st.subheader("LAYOUT UI")
 # Sidebar 
 with st.sidebar:
     st.write("Text in the sidebar")
+    st.markdown("st.markdown: This is markdown **text**")
+
+# sidebar option V2
+st.sidebar.write("Other way to write in sidebar")
+st.sidebar.markdown("### Header 3 (markdown)")
 
 
 # Columns
@@ -280,7 +388,7 @@ st.write('#### Container v2. Group elements. Plot image with matplotlib')
 # create container
 with st.container():
     # all of this are inside the container
-    st.header("Input Section")
+    st.write("##### Input Section")
     
     # ingress a number
     user_input = st.text_input("Type a number:", "10")
@@ -288,7 +396,7 @@ with st.container():
     st.write(f"The input number * 2 is: {processed_input * 2}")
 
     # plot
-    st.header("Plot inside the container")
+    st.write("##### Plot inside the container")
     x = np.linspace(0, 10, 100)
     y = np.sin(processed_input * x)
     fig, ax = plt.subplots()
@@ -299,7 +407,14 @@ with st.container():
 st.write("This is also outside the container")
 
 
-
+st.write('#### Container v3 - interesting example - make a matrix using  column elements')
+# sources: https://docs.streamlit.io/library/api-reference/layout/st.container
+row1 = st.columns(3)
+row2 = st.columns(3)
+for col in row1 + row2:
+    tile = col.container(height=120)
+    tile.title(":balloon:")
+    tile.write(f'matrix content')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -371,60 +486,6 @@ st.plotly_chart(fig) # Show plot plotly in Streamlit - amazing one line of pytho
 
 
 
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-st.divider()
-st.divider()
-# EXAMPLE A BUTTON UPLOAD FILE SINCE THE SIDE BAR - https://bgremoval.streamlit.app/
-st.subheader("UPLOAD FILE - st.file_uploader")
-
-# use st.file_uploader to load files
-uploaded_file = st.file_uploader("Upload a data file", type=["csv", "xlsx"])
-
-# process the file when it is uploaded
-if uploaded_file is not None:
-
-    # load a csv file
-    if uploaded_file.type == "text/csv":
-        df = pd.read_csv(uploaded_file)
-        st.write(df)
-
-    # read a excel file
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        df = pd.read_excel(uploaded_file, engine='openpyxl')
-        st.write(df)
-
-
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-st.divider()
-st.divider()
-# Mine
-st.subheader("DOWNLOAD A FILE - st.download_button")
-
-# generate data
-data = {'Name': ['John', 'Jane', 'Doe'],
-        'Age': [28, 25, 32],
-        'City': ['New York', 'San Francisco', 'Los Angeles']}
-df = pd.DataFrame(data)
-st.write('Example data')
-st.write(df)
-
-#---
-st.write('---> download data. In this example two ways to downlaod the data were generated')
-
-# button to download the data as csv file
-csv_file = df.to_csv(index=False)
-st.download_button("Download CSV", csv_file, file_name='data.csv', key='csv_key')
-
-# button to dowload a txt file
-text_data = "Este es un archivo de texto de ejemplo."
-st.download_button("Download Texto", text_data, file_name='texto_ejemplo.txt', key='text_key')
-
-
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 st.divider()
 st.divider()
@@ -436,7 +497,7 @@ st.subheader("SAVE IN CACHE -decorator- st.cache_data(xx) - st.cache_resource(xx
 st.write('#### @st.cache_data - sleep 15 segs')
 st.write('Decorator to cache functions that return data (e.g. dataframe transforms, database queries, ML inference).')
 
-@st.cache_data
+@st.cache_data(show_spinner="Fetching data...")  # show spinner
 def cache_this_function():
     time.sleep(15)
     out = "I'm done running"
@@ -450,7 +511,7 @@ st.write(out)
 st.write('#### st.cache_resource')
 st.write('Decorator to cache functions that return global resources (e.g. database connections, ML models). Cached objects are shared across all users, sessions')
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Trainning model...")
 def create_simple_linear_regression():
     time.sleep(2)
     X = np.array([1,2,3,4,5,6,7]).reshape(-1,1)
@@ -469,3 +530,282 @@ st.write(f"The prediction is: {pred[0]}")
 st.write('#### Button test cache')
 st.write('This button is not connected to anything, but clicking it is considered user interaction and therefore runs the entire script and you can see the delay in cached codes')
 st.button('Test cache')
+
+
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# link script explicacion: https://github.com/marcopeix/MachineLearningModelDeploymentwithStreamlit/blob/master/23_state_advanced/main.py
+# link documentation: https://docs.streamlit.io/library/api-reference/session-state
+
+# link script example 1:https://github.com/marcopeix/MachineLearningModelDeploymentwithStreamlit/blob/master/24_state_exercise/main.py
+# link script example 2: 
+
+st.subheader("SESSION STATE & CALLBACKS")
+st.write('#### Utiliy')
+st.write('**Session State is a way to share variables between reruns, for each user session**. In addition to the ability to store and persist state, \
+Streamlit also exposes the ability to **manipulate state using Callbacks**. Session state also persists across apps inside a multipage app.')
+
+
+
+
+###############################
+st.divider()
+st.write('#### Example 1: store value in session state a show it')
+st.write("Store widget value in session state")
+st.slider("Select a number", 0, 10, key="slider")
+st.write(st.session_state)
+
+
+
+###############################
+st.divider()
+st.write('#### Example 2: session state & callabacks - the output is written in the top of the web page')
+def form_callback():
+    st.write(st.session_state.my_slider)
+    st.write(st.session_state.my_checkbox)
+
+with st.form(key='my_form'):
+    slider_input = st.slider('My slider', 0, 10, 5, key='my_slider')
+    checkbox_input = st.checkbox('Yes or No', key='my_checkbox')
+    submit_button = st.form_submit_button(label='Submit', on_click=form_callback)
+
+
+
+###############################
+st.divider()
+st.write('#### Example 3: Interactive temperature calculator - modify values of session states - persisting values')
+
+
+if "celsius" not in st.session_state:
+    st.session_state['celsius'] = 0.00
+
+if "farenheit" not in st.session_state:
+    st.session_state['farenheit'] = 32.00
+
+if "kelvin" not in st.session_state:
+    st.session_state['kelvin'] = 273.15
+
+def celsius_conversion():
+    celsius = st.session_state['celsius']
+    
+    st.session_state['farenheit'] = (celsius * 9 / 5) + 32
+    st.session_state['kelvin'] = celsius + 273.15
+
+def farenheit_conversion():
+    farenheit = st.session_state['farenheit']
+
+    st.session_state['celsius'] = (farenheit - 32) * 5 / 9
+    st.session_state['kelvin'] = (farenheit - 32) * 5 / 9 + 273.15
+
+def kelvin_conversion():
+    kelvin = st.session_state['kelvin']
+
+    st.session_state['celsius'] = kelvin - 273.15
+    st.session_state['farenheit'] = (kelvin - 273.15) * 9 / 5 + 32
+
+def add_to_celsius(num):
+    st.session_state['celsius'] += num
+    celsius_conversion()
+
+def set_temperatures(celsius, farenheit, kelvin):
+    st.session_state['celsius'] = celsius
+    st.session_state['farenheit'] = farenheit
+    st.session_state['kelvin'] = kelvin
+
+col1, col2, col3 = st.columns(3)
+
+col1.number_input("Celsius", step=0.01, key="celsius", on_change=celsius_conversion)
+col2.number_input("Farenheit", step=0.01, key="farenheit", on_change=farenheit_conversion)
+col3.number_input("Kelvin", step=0.01, key="kelvin", on_change=kelvin_conversion)
+
+col1, _, _ = st.columns(3)
+num = col1.number_input("Add to Celsius", step=1)
+col1.button("Add", type="primary", 
+            on_click=add_to_celsius, 
+            args=(num,))
+
+col1, col2, col3 = st.columns(3)
+
+col1.button('🧊 Freezing point of water', 
+            on_click=set_temperatures, 
+            kwargs=dict(celsius=0.00, farenheit=32.00, kelvin=273.15))
+col2.button('🔥 Boiling point of water',
+            on_click=set_temperatures,
+            kwargs=dict(celsius=100.00, farenheit=212.00, kelvin=373.15))
+col3.button('🥶 Absolute zero',
+            on_click=set_temperatures,
+            kwargs=dict(celsius=-273.15, farenheit=-459.67, kelvin=0.00))
+
+st.write('values in session state')
+st.write(f'celsius: {st.session_state.celsius}')
+st.write(f'farenheit: {st.session_state.farenheit}')
+st.write(f'kelvin: {st.session_state.kelvin}')
+
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# link notebook: https://github.com/marcopeix/MachineLearningModelDeploymentwithStreamlit/blob/master/18_caching_capstone/main.py
+st.subheader("EXAMPLES STRUCTURE TO ADD PARAMETERS BY USER - THIS IS NOT USING FORM, SO EACH TIME THAT THE USE CHANGE A VALUE ALL THE WEB PAGE IS REFRESHED")
+
+
+####------------####------------####------------####------------
+st.write("##### Input values in columns)")
+col1, col2, col3 = st.columns(3)
+with col1:
+    odor = st.selectbox('Odor', ('a - almond', 'l - anisel', 'c - creosote', 'y - fishy', 'f - foul', 'm - musty', 'n - none', 'p - pungent', 's - spicy'))
+    stalk_surface_above_ring = st.selectbox('Stalk surface above ring', ('f - fibrous', 'y - scaly', 'k - silky', 's - smooth'))
+    stalk_color_below_ring = st.selectbox('Stalk color below ring', ('n - brown', 'b - buff', 'c - cinnamon', 'g - gray', 'o - orange', 'p - pink', 'e - red', 'w - white', 'y - yellow'))
+with col2:
+    gill_size = st.selectbox('Gill size', ('b - broad', 'n - narrow'))
+    stalk_surface_below_ring = st.selectbox('Stalk surface below ring', ('f - fibrous', 'y - scaly', 'k - silky', 's - smooth'))
+    ring_type = st.selectbox('Ring type', ('e - evanescente', 'f - flaring', 'l - large', 'n - none', 'p - pendant', 's - sheathing', 'z - zone'))
+with col3:
+    gill_color = st.selectbox('Gill color', ('k - black', 'n - brown', 'b - buff', 'h - chocolate', 'g - gray', 'r - green', 'o - orange', 'p - pink', 'u - purple', 'e - red', 'w - white', 'y - yellow'))
+    stalk_color_above_ring = st.selectbox('Stalk color above ring', ('n - brown', 'b - buff', 'c - cinnamon', 'g - gray', 'o - orange', 'p - pink', 'e - red', 'w - white', 'y - yellow'))
+    spore_print_color = st.selectbox('Spore print color', ('k - black', 'n - brown', 'b - buff', 'h - chocolate', 'r - green', 'o - orange', 'u - purple', 'w - white', 'y - yellow'))
+
+
+####------------####------------####------------####------------
+st.write('\n\n')
+st.write("##### Operate with input values (in this case, show values)")
+pred_btn = st.button("Do actions with input values - show values", type="primary")
+
+# if the button is press
+if pred_btn:
+    st.write('**column 1**')
+    st.write('odor: ', odor)
+    st.write('stalk_surface_above_ring: ', stalk_surface_above_ring)
+    st.write('stalk_color_below_ring: ', stalk_color_below_ring)
+
+    st.write('**column 2**')
+    st.write('gill_size: ', gill_size)
+    st.write('stalk_surface_below_ring: ', stalk_surface_below_ring)
+    st.write('ring_type: ', ring_type)
+
+    st.write('**column 3**')
+    st.write('gill_color: ', gill_color)
+    st.write('stalk_color_above_ring: ', stalk_color_above_ring)
+    st.write('spore_print_color: ', spore_print_color)
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+st.divider()
+st.divider()
+# link notebook: https://github.com/chrieke/prettymapp/blob/main/streamlit-prettymapp/app.py
+st.subheader("EXAMPLES STRUCTURE TO ADD PARAMETERS BY USER - THIS EXAMPLE USE FORM")
+st.write('#### ADAPTED FROM https://github.com/chrieke/prettymapp/blob/main/streamlit-prettymapp/app.py')
+
+
+
+
+
+
+
+
+
+st.write("")
+form = st.form(key="form_settings")
+col1, col2, col3 = form.columns([3, 1, 1])
+
+address = col1.text_input(
+    "Location address",
+    key="address",
+)
+radius = col2.slider(
+    "Radius",
+    100,
+    1500,
+    key="radius",
+)
+
+expander = form.expander("Customize map style")
+col1style, col2style, _, col3style = expander.columns([2, 2, 0.1, 1])
+
+shape_options = ["circle", "rectangle"]
+shape = col1style.radio(
+    "Map Shape",
+    options=shape_options,
+    key="shape",
+)
+
+bg_shape_options = ["rectangle", "circle", None]
+bg_shape = col1style.radio(
+    "Background Shape",
+    options=bg_shape_options,
+    key="bg_shape",
+)
+bg_color = col1style.color_picker(
+    "Background Color",
+    key="bg_color",
+)
+bg_buffer = col1style.slider(
+    "Background Size",
+    min_value=0,
+    max_value=50,
+    help="How much the background extends beyond the figure.",
+    key="bg_buffer",
+)
+
+col1style.markdown("---")
+contour_color = col1style.color_picker(
+    "Map contour color",
+    key="contour_color",
+)
+contour_width = col1style.slider(
+    "Map contour width",
+    0,
+    30,
+    help="Thickness of contour line sourrounding the map.",
+    key="contour_width",
+)
+
+name_on = col2style.checkbox(
+    "Display title",
+    help="If checked, adds the selected address as the title. Can be customized below.",
+    key="name_on",
+)
+custom_title = col2style.text_input(
+    "Custom title (optional)",
+    max_chars=30,
+    key="custom_title",
+)
+font_size = col2style.slider(
+    "Title font size",
+    min_value=1,
+    max_value=50,
+    key="font_size",
+)
+font_color = col2style.color_picker(
+    "Title font color",
+    key="font_color",
+)
+text_x = col2style.slider(
+    "Title left/right",
+    -100,
+    100,
+    key="text_x",
+)
+text_y = col2style.slider(
+    "Title top/bottom",
+    -100,
+    100,
+    key="text_y",
+)
+text_rotation = col2style.slider(
+    "Title rotation",
+    -90,
+    90,
+    key="text_rotation",
+)
+form.form_submit_button(label="Submit")

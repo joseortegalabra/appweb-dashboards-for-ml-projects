@@ -1,0 +1,7 @@
+streamlit
+streamlit-autorefresh
+pytz
+gunicorn
+plotly
+pandas
+numpy
