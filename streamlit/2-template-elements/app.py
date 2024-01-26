@@ -8,6 +8,18 @@ from sklearn.linear_model import LinearRegression
 import time
 from datetime import datetime, timedelta
 
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# ---------------------------- Page configuration ----------------------------
+st.set_page_config(
+    page_title="Homepage", # name that apear in the tab in web navigator
+    page_icon="🏡", # icon that apear in the tab in web navigator
+    layout="centered",
+    initial_sidebar_state="auto"
+)
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 #NOTEBOOK TEXT ELEMENTS: https://github.com/marcopeix/MachineLearningModelDeploymentwithStreamlit/blob/master/05_text_elements/main.py
 st.subheader("TEXT DISPLAT ELEMENTS")
@@ -533,6 +545,11 @@ st.button('Test cache')
 
 
 
+####------------####------------####------------####------------
+## clean cache after X time
+#@st.cache_data(ttl=600)
+# def define_function(x, y, z):
+#    return x, y, z
 
 
 
