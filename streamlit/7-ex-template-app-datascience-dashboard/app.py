@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 from google.cloud import bigquery
 
 import os
@@ -15,6 +16,8 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 import plotly
 
+################################# update every 5 minutes interval = (minutes) * (seconds) * (1000) #################################
+st_autorefresh(interval = 5 * 60 * 1000, key="dataframerefresh") # if it requiered more frecuency could generate an observer and if this value change, refresh all page
 
 
 ################################# READ ENV VARIABLES - CREDENTIALS TO CONNECT TO BQ - saved in .env file #################################
