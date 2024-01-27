@@ -463,7 +463,7 @@ ax.set_xlabel('Time')
 ax.set_ylabel('Values')
 ax.set_title('Trend in a time series')
 ax.legend()
-st.pyplot(fig) # IMPORTANTE show figure of plotly in seaborn
+st.pyplot(fig) # show in appweb
 
 
 # plot seaborn
@@ -475,7 +475,7 @@ plt.xlabel('Time')
 plt.ylabel('Values')
 plt.title('Trend and Noise in Time Series')
 plt.legend()
-st.pyplot(fig)  # Show plot in Streamlit
+st.pyplot(fig)  # show in appweb
 
 
 

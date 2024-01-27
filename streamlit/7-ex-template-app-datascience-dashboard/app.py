@@ -119,7 +119,7 @@ def identify_actual_alert_to_traffic_light(nivel_alert):
         
     return colors, sizes
 
-def make_plot_semaforo(nivel_alert):
+def make_plot_traffic_light_alerts(nivel_alert):
     """
     Given the actual level of alert, make a traffic light with turn on the level of alert
     """
@@ -168,18 +168,20 @@ def make_plot_semaforo(nivel_alert):
             showticklabels=False,
             zeroline=False
         ),
-        height=600,
-        width=300,
-        showlegend=False
+        #height=600,
+        width=150,
+        title = "Actual Alert",
+        showlegend=False,
+        title_x=0.5
     )
     return fig
 
 
 
 ################################# XXXXX #################################
-def trend_true_vs_predicted(df, save_json = False):
+def trend_true_vs_predicted(df):
     """
-    Graficar real vs predicho
+    Plot trend true values vs predicted values
     """
     fig = make_subplots(rows=1, cols=1, shared_xaxes=True)
      
@@ -187,34 +189,77 @@ def trend_true_vs_predicted(df, save_json = False):
     fig.add_trace(go.Scatter(x=df['datetime'], y=df['Value_true'], mode='lines', name='Valor real', line=dict(color='grey', width=3)), row=1, col=1)
 
     fig.update_layout(
-        title='Tendencia Kappa real vs Predicho (últimas 8 horas)',
-        xaxis_title='Fecha y hora',
-        yaxis_title='Valor',
-        yaxis_title_standoff=30, # ajustar el valor según la distancia deseada
-        height=600, 
-        width=1000,
-        title_x=0.5
+        title='Trend Target True vs Target Predicted (Last 8 hours)',
+        xaxis_title='Date and Time',
+        yaxis_title='Value Target',
+        yaxis_title_standoff=30,
+        #height=600, 
+        #width=1000,
+       # title_x=0.5
     )
-
-    # show plot - desactivado porque sino abre el plot en otra pestaña
-    # fig.show()
-    
-    # json to html
-    if save_json == True:
-        graphJSON = json.dumps(fig, cls = plotly.utils.PlotlyJSONEncoder)
-        return graphJSON
+    return fig
 
 
 
-################################# XXXXX #################################
+################################# plot trend barplots alerts #################################
+def trend_barplot_alerts(df):
+    """
+    Make a barplot to represent the trend of the differents predictions of alerts: low, medium, high
+    """
 
+    ###### definir params ######
+
+    # parámetros mapeo colores (bajo, medio, alto) (green, orange, red), (1,2,3)
+    colors = {'bajo': 'green', 'medio': 'orange', 'alto': 'red'}
+    number = {'bajo': 1, 'medio': 2, 'alto': 3}
+
+
+    # obtener los valores únicos de las predicciones (por ejemplo que solo hallan prediciones bajo y no medio ni alto)
+    alertas_unicas_generadas = df['Alert_prediction'].unique()
+
+    # filtrar los parámetros de mapeo de acuerdo a los valors únicos predichos
+    # por ejemplo si en las predicciones solo hay valores "bajo" y "alto", el valor "medio debe de borrarse de los params"
+    colors = {clave: valor for clave, valor in colors.items() if clave in alertas_unicas_generadas}
+    number = {clave: valor for clave, valor in number.items() if clave in alertas_unicas_generadas}
+    cat_order = list(colors.keys())
+
+
+    ###### transformaciones a los datos - de acuerdo a los params ######
+
+    # Convertir la columna "Alert_prediction" en tipo categórico con un orden específico
+    df['Alert_prediction'] = pd.Categorical(df['Alert_prediction'], categories=cat_order, ordered=True)
+
+    ## Crear la columna "Bar_size" con el tamaño de las barras
+    df['Bar_size'] = df['Alert_prediction'].map(number)
+
+
+
+    ########################################################################################################################
+    # Crear el gráfico de barras
+    fig = px.bar(df, x='datetime', y='Bar_size', color='Alert_prediction', barmode='stack', color_discrete_map=colors)
+
+    # Establecer el orden deseado en el eje y
+    fig.update_layout(title='Trend Alerts Generated (Last 8 Hours)',
+                      xaxis_title='Date and Time',
+                      yaxis_title='Value Alert',
+                      yaxis=dict(categoryorder='array', categoryarray=cat_order, tickvals=list(range(1, len(cat_order)+1)), ticktext=cat_order),
+                      #title_x=0.5
+                     )
+
+    return fig
 
 
 
 
 
 if __name__ == "__main__":
-    st.header("Example dashboard app that show the result of a ML model running in other cloud service")
+# ---------------------------- Page configuration ----------------------------
+    #### set page configuration
+    st.set_page_config(layout="wide")
+
+    
+    ### Tittle page
+    st.subheader("Example dashboard app that show the result of a ML model that is running in other cloud services")
 
 
     # show actual time
@@ -236,8 +281,7 @@ if __name__ == "__main__":
     COLOR_ALERTA_PREDICCION = get_color_alerta_prediction(ALERTA_PREDICCION)
 
     # feature 1.2 traffic light -> alert actual prediction
-    FIG_TRAFFIC_LIGHT = make_plot_semaforo(nivel_alert = COLOR_ALERTA_PREDICCION)
-
+    FIG_TRAFFIC_LIGHT = make_plot_traffic_light_alerts(nivel_alert = COLOR_ALERTA_PREDICCION)
 
 
     ########### FEATURE 2 - TRENDS ###########
@@ -256,5 +300,30 @@ if __name__ == "__main__":
 
     
     # feature 2.2 graficar tendencia alertas generadas
-    FIG_TREND_BARPLOT_ALERTS = tendencia_alertas_predichas(df = table_tendency_predictions)
+    FIG_TREND_BARPLOT_ALERTS = trend_barplot_alerts(df = table_tendency_predictions)
     
+
+
+    ########### SHOW VALUES, PLOTS IN UI STREAMLIT ###########
+
+    ###### Firts group of components, alert
+    col1_alert, col2_alert, col3_alert, col4_alert = st.columns(4)
+    
+    # "metrics" - "show values of the prediction"
+    col1_alert.metric(label = "Datetime last update webpage", value = FECHA_ULTIMA_ACTUALIZACION)
+    col2_alert.metric(label = "Datetime Prediction Model", value = FECHA_PREDICCION)
+    col3_alert.metric(label = "Value Predicted", value = VALOR_PREDICCION)
+    col4_alert.metric(label = "Alert Level Prediction", value = ALERTA_PREDICCION)
+
+
+    ###### Second group of components, trend of alerts
+    col1_trend, col2_trend = st.columns(2)
+
+    # figure trend true vs pred
+    col1_trend.plotly_chart(FIG_TREND_TRUE_VS_PRED)
+
+    # figure trend barplot alerts
+    col2_trend.plotly_chart(FIG_TREND_BARPLOT_ALERTS)
+
+    # figure plotly traffic light alert
+    #col3_trend.plotly_chart(FIG_TRAFFIC_LIGHT)
