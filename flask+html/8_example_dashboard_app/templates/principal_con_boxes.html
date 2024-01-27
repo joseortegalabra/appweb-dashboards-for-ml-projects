@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style_box.css') }}">  <!-- css custom -->
+</head>
+
+
+<!-- Body -->
+<body>
+    
+    <!--Texto con la hora actual, actualizándose cada segundo-->
+    <h4>Current time:</h4>
+    <div id="hora_actual"></div>
+    <script>
+        var source = new EventSource('/actual_time');
+        source.addEventListener('message', function(event) {
+            document.getElementById('hora_actual').innerHTML = event.data;
+        });
+    </script>
+
+
+    <!-- INICIO cajas "kpis/resultados" -->
+    <div class="kpi-section">
+        <div>
+            <div class="text-align">
+                <h2>Resultados Predicción</h2>
+            </div>
+        </div>
+        <div class="flex_response kpi">
+
+        <!--Texto con la hora de la última actualización backend-->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{FECHA_ULTIMA_ACTUALIZACION}}</span>
+            </div>
+            <div>
+                <p class="kpi-title">Última Actualización</p>
+            </div>
+        </div>
+
+        <!--Texto con la hora de predicción-->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{FECHA_PREDICCION}}</span>
+            </div>
+            <div>
+                <p class="kpi-title">Hora Predicción</p>
+            </div>
+        </div>
+
+        <!-- Valor Predicción -->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{VALOR_PREDICCION}}</span>
+            </div>
+            <div>
+                <p class="kpi-title">Valor Predicción</p>
+            </div>
+        </div>
+
+
+        <!-- Grado de alerta de la predicción -->
+        <div class="metric_box">
+            <div>
+                <span class="kpi-value">{{ALERTA_PREDICCION}}</span>
+                <span>%</span>
+            </div>
+            <div>
+                <p class="kpi-title">Grado Alerta Predicción</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- FIN cajas "kpis/resultados" -->
+
+
+
+
+
+
+    <!-- PLOT semáforo alerta -->
+    <div id="plot_semaforo_alerta" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_SEMAFORO_ALERTA | safe}};
+        Plotly.plot('plot_semaforo_alerta',graphs,{});
+    </script>
+
+    <br><br>
+
+
+    
+    <!-- PLOT tendencia numérica real vs predicho -->
+    <div id="plot_tendencia_numerica" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_TENDENCIA_REAL_PREDICHO | safe}};
+        Plotly.plot('plot_tendencia_numerica',graphs,{});
+    </script>
+
+    <br><br>
+
+    <!-- PLOT tendencia alertas generadas -->
+    <div id="plot_tendencia_alertas" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_TENDENCIA_ALERTAS | safe}};
+        Plotly.plot('plot_tendencia_alertas',graphs,{});
+    </script>
+
+    <br><br>
+
+    <!--Recargar página cada 360 segundos (tiempo en milisegundos)-->
+    <script>
+    setTimeout(function(){
+    location.reload();
+    }, 360000);
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+streamlit
+python-dotenv
+
+gunicorn
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+
+google-cloud-bigquery 
+db-dtypes

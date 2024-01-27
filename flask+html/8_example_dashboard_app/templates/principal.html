@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+<!-- Head -->
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style_box.css') }}">  <!-- css custom para boxes -->
+    
+    <!-- Estilo para el título -->
+    <style>
+        h1 {
+            text-align: center;
+        }
+    </style>
+
+    <!-- Estilo para las secciones de los KPIs y los gráficos -->
+    <style>
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+    
+        .kpi-section {
+            flex: 1 0 75%; /* El 75% de ancho disponible */
+        }
+    
+        .chart {
+            width: 100%; /* Ancho del gráfico */
+        }
+    
+        .text-box {
+            width: calc(100% - 20px); /* Ancho de la caja de texto (25% - 20px de margen) */
+            margin-right: 20px; /* Margen derecho para el semáforo */
+            padding: 0;
+            border: 1px solid gray;
+        }
+    
+        #plot_semaforo_alerta {
+            width: calc(25% - 20px); /* Ancho del semáforo (25% - 20px de margen) */
+            margin-right: 0; /* Eliminar margen derecho para el semáforo */
+        }
+    </style>
+</head>
+
+
+<!-- Body -->
+<body>
+    
+    <!-- Agregar el título -->
+    <h1>TEMPLATE APP WEB FLASK + HTML</h1>
+
+
+    <!--Texto con la hora actual, actualizándose cada segundo-->
+    <h4>Current time:</h4>
+    <div id="hora_actual"></div>
+    <script>
+        var source = new EventSource('/actual_time');
+        source.addEventListener('message', function(event) {
+            document.getElementById('hora_actual').innerHTML = event.data;
+        });
+    </script>
+
+
+
+<!-- BOXES CON LOS RESULTADOS PRINCIPALES DE ENTRENAMIENTO Y ADEMÁS EL SEMÁFORO A LA IZQUIERDA -->
+  <div class="row">
+    <!-- PLOT semáforo alerta -->
+    <div id="plot_semaforo_alerta" class="chart"></div>
+  
+    <div class="kpi-section">
+      <div>
+        <div class="text-align">
+          <h2>Resultados Predicción</h2>
+        </div>
+      </div>
+      <div class="flex_response kpi">
+  
+        <!--Texto con la hora de la última actualización backend-->
+        <div class="metric_box">
+          <div>
+            <span class="kpi-value">{{FECHA_ULTIMA_ACTUALIZACION}}</span>
+          </div>
+          <div>
+            <p class="kpi-title">Última Actualización</p>
+          </div>
+        </div>
+  
+        <!--Texto con la hora de predicción-->
+        <div class="metric_box">
+          <div>
+            <span class="kpi-value">{{FECHA_PREDICCION}}</span>
+          </div>
+          <div>
+            <p class="kpi-title">Hora Predicción</p>
+          </div>
+        </div>
+  
+        <!-- Valor Predicción -->
+        <div class="metric_box">
+          <div>
+            <span class="kpi-value">{{VALOR_PREDICCION}}</span>
+          </div>
+          <div>
+            <p class="kpi-title">Valor Predicción</p>
+          </div>
+        </div>
+  
+  
+        <!-- Grado de alerta de la predicción -->
+        <div class="metric_box">
+          <div>
+            <span class="kpi-value">{{ALERTA_PREDICCION}}</span>
+          </div>
+          <div>
+            <p class="kpi-title">Grado Alerta Predicción</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_SEMAFORO_ALERTA | safe}};
+        Plotly.plot('plot_semaforo_alerta',graphs,{});
+    </script>
+
+
+
+
+    <br>
+    <!-- PLOT tendencia numérica real vs predicho -->
+    <div id="plot_tendencia_numerica" class="chart2"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_TENDENCIA_REAL_PREDICHO | safe}};
+        Plotly.plot('plot_tendencia_numerica',graphs,{});
+    </script>
+
+    <br>
+    <!-- PLOT tendencia alertas generadas -->
+    <div id="plot_tendencia_alertas" class="chart2"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var graphs = {{JSON_TENDENCIA_ALERTAS | safe}};
+        Plotly.plot('plot_tendencia_alertas',graphs,{});
+    </script>
+
+
+    <!--Recargar página cada 300 segundos - 5 minutos (tiempo en milisegundos)-->
+    <script>
+    setTimeout(function(){
+    location.reload();
+    }, 300000);
+    </script>
+
+
+
+</body>
+</html>

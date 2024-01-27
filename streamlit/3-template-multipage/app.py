@@ -21,6 +21,16 @@ st.session_state['text_page_3'] = st.session_state['text_page_3']
 
 
 
+# ---------------------------- Page configuration ----------------------------
+st.set_page_config(
+    page_title="Homepage", # name that apear in the tab in web navigator
+    page_icon="🏡", # icon that apear in the tab in web navigator
+    layout="centered",
+    initial_sidebar_state="auto"
+)
+
+
+
 # ---------------------------- calculations ----------------------------
 # get actual time
 actual_time = datetime.now()
