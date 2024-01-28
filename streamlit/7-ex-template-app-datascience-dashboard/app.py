@@ -259,8 +259,9 @@ if __name__ == "__main__":
     
     
     ################################# update every 5 minutes interval = (minutes) * (seconds) * (1000) #################################
-    st_autorefresh(interval = 5 * 60 * 1000, key="dataframerefresh") # if it requiered more frecuency could generate an observer and if this value change, refresh all page
-
+    # st_autorefresh(interval = 5 * 60 * 1000, key="dataframerefresh") # if it requiered more frecuency could generate an observer and if this value change, refresh all page
+    count_refresh_page = st_autorefresh(interval = 5 * 60 * 1000)
+    # try no key:  An optional key that uniquely identifies this component. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.
     
     
     ### Tittle page
